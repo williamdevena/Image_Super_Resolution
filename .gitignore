@@ -1,3 +1,5 @@
 test_upsampling/*
 *.png
 *.jpg
+project_log/*
+upsampling/*
