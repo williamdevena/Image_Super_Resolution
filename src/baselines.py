@@ -19,9 +19,8 @@ def baselines():
 
     Returns: None
     """
-    test_ds_path = os.path.join(
-         costants.DATASET_PATH, "Track_2", "DIV2K_test_LR_unknown", "X4")
     original_ds_path = costants.ORIGINAL_DS_TEST
+    test_ds_path = costants.TRACK2_TEST
 
     ## BILINEAR INTERPOLATION
     avg_ssim, avg_lpips, avg_psnr = test_baseline_upscaling(
@@ -29,7 +28,6 @@ def baselines():
         test_ds_path=test_ds_path,
         original_ds_path=original_ds_path,
         path_upscaled_folder="./upsampling/bilinear_interp")
-
     logging_utilities.print_name_stage_project("BILINEAR INTERPOLATION")
     logging.info(f"AVG SSIM: {avg_ssim}\nAVG LPIPS: {avg_lpips}\nAVG PSNR: {avg_psnr}")
 
@@ -39,7 +37,6 @@ def baselines():
         test_ds_path=test_ds_path,
         original_ds_path=original_ds_path,
         path_upscaled_folder="./upsampling/nn")
-
     logging_utilities.print_name_stage_project("NEAREST NEIGHBOUR")
     logging.info(f"AVG SSIM: {avg_ssim}\nAVG LPIPS: {avg_lpips}\nAVG PSNR: {avg_psnr}")
 
