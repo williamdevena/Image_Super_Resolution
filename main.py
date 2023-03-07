@@ -4,7 +4,11 @@ import logging
 import os
 from datetime import datetime
 
-from src import baselines, logging_utilities
+import matplotlib.pyplot as plt
+from torchvision.transforms import transforms
+
+from src import baselines, costants, logging_utilities
+from src.super_resolution_dataset import SuperResolutionDataset
 
 
 def main():
@@ -34,7 +38,29 @@ def main():
 
 
     ## BASELINES TESTING
-    baselines.baselines()
+    #baselines.baselines()
+
+
+
+    ## TEST PYTROCH DS
+    transform = transforms.Compose([
+            transforms.ToTensor()
+        ])
+    ds = SuperResolutionDataset(
+        hr_path=costants.ORIGINAL_DS_TRAIN,
+        lr_path=costants.TRACK2_TRAIN,
+        transform=transform
+    )
+    #print(ds.list_couples_hr_lr)
+    hr_image, lr_image = ds[567]
+
+    print(hr_image.shape, lr_image.shape)
+    plt.imshow(lr_image.permute(1,2,0))
+    plt.show()
+    # plt.imshow(hr_image)
+    # plt.show()
+
+
 
 
 if __name__ == "__main__":

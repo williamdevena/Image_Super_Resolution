@@ -8,7 +8,7 @@ import cv2
 import skimage
 import torch
 
-from src import costants, logging_utilities, metrics
+from utils import costants, logging_utilities, metrics
 
 
 def baselines():
