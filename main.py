@@ -7,8 +7,9 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 from torchvision.transforms import transforms
 
-from src import baselines, costants, logging_utilities
+from src import baselines
 from src.super_resolution_dataset import SuperResolutionDataset
+from utils import costants, logging_utilities
 
 
 def main():
@@ -57,8 +58,6 @@ def main():
     print(hr_image.shape, lr_image.shape)
     plt.imshow(lr_image.permute(1,2,0))
     plt.show()
-    # plt.imshow(hr_image)
-    # plt.show()
 
 
 
