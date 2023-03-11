@@ -30,7 +30,7 @@ class ConvBlock(nn.Module):
 
 
 class UpSampleBlock(nn.Module):
-    def __init__(self, in_channels, scale_factor):
+    def __init__(self, in_channels, scale_factor=2):
         super().__init__()
         self.in_channels = in_channels
         self.upsample = nn.Upsample(scale_factor=scale_factor, mode="nearest")
@@ -88,7 +88,7 @@ class RRDB(nn.Module):
         self.in_channels = in_channels
         self.residual_beta = residual_beta
 
-        self.rrdb = nn.Sequential([DenseResidualBlock(in_channels=self.in_channels)
+        self.rrdb = nn.Sequential(*[DenseResidualBlock(in_channels=self.in_channels)
                                     for _ in range(3)])
 
     def forward(self, x):
@@ -105,7 +105,7 @@ class Generator(nn.Module):
         self.num_blocks = num_blocks
 
         self.initial = nn.Conv2d(
-            in_channels=self.in_channels
+            in_channels=self.in_channels,
             out_channels=self.num_channels,
             kernel_size=9,
             stride=1,
@@ -113,7 +113,7 @@ class Generator(nn.Module):
             bias=True
         )
 
-        self.residuals = nn.Sequential([RRDB(in_channels=self.num_channels)
+        self.residuals = nn.Sequential(*[RRDB(in_channels=self.num_channels)
                                         for _ in range(self.num_blocks)])
 
         self.conv = nn.Conv2d(in_channels=self.num_channels,
@@ -146,3 +146,66 @@ class Generator(nn.Module):
                 bias=True
             )
         )
+
+
+    def forward(self, x):
+        initial = self.initial(x)
+        out = self.residuals(initial)
+        out = self.conv(out)
+        out = out + initial
+        out = self.upsamples(out)
+        out = self.final(out)
+
+        return out
+
+
+
+
+
+
+class Discriminator(nn.Module):
+    def __init__(self, in_channels=3, features=[64, 64, 128, 128, 256, 256, 512, 512]):
+        super().__init__()
+        blocks = []
+        for idx, feature in enumerate(features):
+            blocks.append(
+                ConvBlock(
+                    in_channels,
+                    feature,
+                    # kernel_size=3,
+                    # stride=1 + idx % 2,
+                    # padding=1,
+                    use_act=True,
+                ),
+            )
+            in_channels = feature
+
+        self.blocks = nn.Sequential(*blocks)
+        self.classifier = nn.Sequential(
+            nn.AdaptiveAvgPool2d((6, 6)),
+            nn.Flatten(),
+            nn.Linear(512 * 6 * 6, 1024),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Linear(1024, 1),
+        )
+
+    def forward(self, x):
+        x = self.blocks(x)
+        return self.classifier(x)
+
+
+
+def main():
+    generator = Generator()
+    discriminator = Discriminator()
+    low_res = 24
+    x = torch.rand((5, 3, low_res, low_res))
+    gen_out = generator(x)
+    disc_out = discriminator(gen_out)
+
+    print(gen_out.shape, disc_out.shape, disc_out)
+
+
+
+if __name__=="__main__":
+    main()
