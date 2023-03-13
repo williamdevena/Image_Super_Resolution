@@ -30,8 +30,9 @@ class ConvBlock(nn.Module):
 
 
 class UpSampleBlock(nn.Module):
-    def __init__(self, in_channels, scale_factor=2):
+    def __init__(self, upsample_algo, in_channels, scale_factor=2):
         super().__init__()
+        self.upsample_algo=upsample_algo
         self.in_channels = in_channels
         self.upsample = nn.Upsample(scale_factor=scale_factor, mode="nearest")
         self.conv = nn.Conv2d(in_channels=self.in_channels,
@@ -98,8 +99,9 @@ class RRDB(nn.Module):
 
 
 class Generator(nn.Module):
-    def __init__(self, in_channels=3, num_channels=64, num_blocks=23):
+    def __init__(self, upsample_algo, in_channels=3, num_channels=64, num_blocks=23):
         super().__init__()
+        self.upsample_algo=upsample_algo
         self.in_channels = in_channels
         self.num_channels = num_channels
         self.num_blocks = num_blocks
@@ -123,8 +125,8 @@ class Generator(nn.Module):
                               padding=1)
 
         self.upsamples = nn.Sequential(
-            UpSampleBlock(in_channels=self.num_channels),
-            UpSampleBlock(in_channels=self.num_channels)
+            UpSampleBlock(upsample_algo=self.upsample_algo, in_channels=self.num_channels),
+            UpSampleBlock(upsample_algo=self.upsample_algo, in_channels=self.num_channels)
         )
 
         self.final = nn.Sequential(
@@ -190,16 +192,18 @@ class Discriminator(nn.Module):
         )
 
     def forward(self, x):
+        print(x.shape)
         x = self.blocks(x)
+        print(x.shape)
         return self.classifier(x)
 
 
 
 def main():
-    generator = Generator()
+    generator = Generator(upsample_algo="nearest")
     discriminator = Discriminator()
-    low_res = 24
-    x = torch.rand((5, 3, low_res, low_res))
+    #low_res = 24
+    x = torch.rand((5, 3, 40, 20))
     gen_out = generator(x)
     disc_out = discriminator(gen_out)
 

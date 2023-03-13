@@ -1,13 +1,15 @@
 
-
 import logging
 import os
 from datetime import datetime
 
 import matplotlib.pyplot as plt
+from torch import nn, optim
+from torch.utils.data import DataLoader
 from torchvision.transforms import transforms
 
-from src import baselines
+from models import esrgan
+from src import baselines, train
 from src.super_resolution_dataset import SuperResolutionDataset
 from utils import costants, logging_utilities, preprocessing
 
@@ -64,11 +66,24 @@ def main():
 
     ## CREATE DOWNSAMPLED DS
 
-    preprocessing.create_downsampled_ds(
-        original_ds_path=costants.ORIGINAL_DS_TRAIN,
-        new_dataset_path="../Data/HR2/DIV2K_train_HR",
-        downsample_dimensions=(1020, 702)
-    )
+    # preprocessing.create_downsampled_ds(
+    #     original_ds_path=costants.ORIGINAL_DS_VAL,
+    #     new_dataset_path="../Data/X8/DIV2K_val_LR",
+    #     downsample_dimensions=(255, 175)
+    # )
+
+
+    ## RENAME HR2 IMAGES
+    # preprocessing.rename_images_x8()
+
+
+
+    ## PSNR-BASED GENERATOR TRAINING
+
+    train.train(num_epochs=2,
+                device="cpu",
+                run_name="TEST_GENERATOR")
+
 
 
 

@@ -3,3 +3,4 @@ test_upsampling/*
 *.jpg
 project_log/*
 upsampling/*
+runs/*

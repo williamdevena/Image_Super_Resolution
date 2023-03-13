@@ -1,6 +1,7 @@
 import os
 
 import cv2
+from PIL import Image
 from torch.utils.data import Dataset
 
 from utils import costants
@@ -35,7 +36,7 @@ class SuperResolutionDataset(Dataset):
         for hr_image_name in hr_images:
             if ".png" in hr_image_name:
                 id_num = hr_image_name.split(".")[0]
-                lr_image_name = id_num +"x4.png"
+                lr_image_name = id_num +"x4(x8).png"
                 hr_image_path = os.path.join(self.hr_path, hr_image_name)
                 lr_image_path = os.path.join(self.lr_path, lr_image_name)
                 list_couples_hr_lr.append((hr_image_path, lr_image_path))
@@ -51,8 +52,10 @@ class SuperResolutionDataset(Dataset):
 
     def __getitem__(self, idx):
         hr_image_name, lr_image_name = self.list_couples_hr_lr[idx]
-        hr_image = cv2.imread(hr_image_name)
-        lr_image = cv2.imread(lr_image_name)
+        # hr_image = cv2.imread(hr_image_name)
+        # lr_image = cv2.imread(lr_image_name)
+        hr_image = Image.open(hr_image_name)
+        lr_image = Image.open(lr_image_name)
         if self.transform:
             hr_image = self.transform(hr_image)
             lr_image = self.transform(lr_image)
