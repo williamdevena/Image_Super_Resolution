@@ -34,7 +34,7 @@ class UpSampleBlock(nn.Module):
         super().__init__()
         self.upsample_algo=upsample_algo
         self.in_channels = in_channels
-        self.upsample = nn.Upsample(scale_factor=scale_factor, mode="nearest")
+        self.upsample = nn.Upsample(scale_factor=scale_factor, mode=self.upsample_algo)
         self.conv = nn.Conv2d(in_channels=self.in_channels,
                               out_channels=self.in_channels,
                               kernel_size=3,
@@ -45,9 +45,11 @@ class UpSampleBlock(nn.Module):
 
 
     def forward(self, x):
+        #print(x.shape)
         out = self.upsample(x)
         out = self.conv(out)
         out = self.act(out)
+        #print(out.shape)
 
         return out
 
@@ -109,7 +111,7 @@ class Generator(nn.Module):
         self.initial = nn.Conv2d(
             in_channels=self.in_channels,
             out_channels=self.num_channels,
-            kernel_size=9,
+            kernel_size=3,
             stride=1,
             padding=1,
             bias=True
@@ -126,7 +128,9 @@ class Generator(nn.Module):
 
         self.upsamples = nn.Sequential(
             UpSampleBlock(upsample_algo=self.upsample_algo, in_channels=self.num_channels),
-            UpSampleBlock(upsample_algo=self.upsample_algo, in_channels=self.num_channels)
+            UpSampleBlock(upsample_algo=self.upsample_algo, in_channels=self.num_channels),
+            #UpSampleBlock(upsample_algo=self.upsample_algo, in_channels=self.num_channels),
+
         )
 
         self.final = nn.Sequential(
@@ -192,9 +196,7 @@ class Discriminator(nn.Module):
         )
 
     def forward(self, x):
-        print(x.shape)
         x = self.blocks(x)
-        print(x.shape)
         return self.classifier(x)
 
 

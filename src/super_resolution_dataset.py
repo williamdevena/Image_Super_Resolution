@@ -1,10 +1,11 @@
 import os
 
 import cv2
+import numpy as np
 from PIL import Image
 from torch.utils.data import Dataset
 
-from utils import costants
+#from utils import costants
 
 
 class SuperResolutionDataset(Dataset):
@@ -13,8 +14,10 @@ class SuperResolutionDataset(Dataset):
     Image Super Resolution  framework.
     """
 
-    def __init__(self, hr_path, lr_path, transform=None):
-        self.transform = transform
+    def __init__(self, hr_path, lr_path, transform_both, transform_hr, transform_lr):
+        self.transform_both = transform_both
+        self.transform_hr = transform_hr
+        self.transform_lr = transform_lr
         self.hr_path = hr_path
         self.lr_path = lr_path
         self.list_couples_hr_lr = self.build_list_couples_hr_lr()
@@ -51,22 +54,16 @@ class SuperResolutionDataset(Dataset):
 
 
     def __getitem__(self, idx):
-        hr_image_name, lr_image_name = self.list_couples_hr_lr[idx]
+        hr_image_name, _ = self.list_couples_hr_lr[idx]
         # hr_image = cv2.imread(hr_image_name)
         # lr_image = cv2.imread(lr_image_name)
-        hr_image = Image.open(hr_image_name)
-        lr_image = Image.open(lr_image_name)
-        if self.transform:
-            hr_image = self.transform(hr_image)
-            lr_image = self.transform(lr_image)
+        image = np.array(Image.open(hr_image_name))
+        #lr_image = Image.open(lr_image_name)
+        #if self.transform:
+        image = self.transform_both(image=image)["image"]
+        hr_image = self.transform_hr(image=image)["image"]
+        lr_image = self.transform_lr(image=image)["image"]
+
+        #lr_image = self.transform(lr_image)
 
         return hr_image, lr_image
-
-
-if __name__=="__main__":
-    ds = SuperResolutionDataset(
-        hr_path=costants.ORIGINAL_DS_TRAIN,
-        lr_path=costants.TRACK2_TRAIN
-    )
-
-    print(ds.list_couples_hr_lr)
