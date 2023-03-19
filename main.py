@@ -80,13 +80,18 @@ def main():
 
     ## PSNR-BASED GENERATOR TRAINING
 
-    train.train(start_epoch=0,
-                num_epochs=2,
-                device="cpu",
-                run_name="TEST_GENERATOR",
-                weights_folder="./models_weights",
-                batch_size=64,
-                pretrained=True)
+    train.train(start_epoch=100,
+        num_epochs=100,
+        device="cuda",
+        run_name="PSNR_GENERATOR_3",
+        weights_folder="./models_weights/gen_15blocks",
+        batch_size=64,
+        lr=0.0005,
+        num_blocks_gen=15,
+        pretrained_gen=True,
+        #pretrained_disc=False,
+        weights_gen="./models_weights/gen_15blocks/model_100.pt"
+    )
 
 
 
