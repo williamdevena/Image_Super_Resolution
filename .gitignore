@@ -1,6 +1,6 @@
 test_upsampling/*
 *.png
 *.jpg
-project_log/*
+project_log/assignment.log
 upsampling/*
 runs/*
