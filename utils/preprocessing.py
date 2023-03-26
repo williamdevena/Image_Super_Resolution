@@ -1,8 +1,25 @@
 import os
 
 import cv2
+from cleanvision.imagelab import Imagelab
 
 from utils import costants
+
+
+def analyze_quality_of_images(path_ds):
+    """
+    Analyses the overall quality of the dataset by looking
+    for things like duplicates, blurry images, and dark images.
+
+    Args:
+        path_ds (str): path of the dataset
+    """
+    imagelab = Imagelab(data_path=path_ds)
+    imagelab.find_issues()
+    imagelab.report()
+
+
+
 
 
 def create_downsampled_ds(original_ds_path, new_dataset_path, downsample_dimensions):
