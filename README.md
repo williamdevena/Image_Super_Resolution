@@ -1,5 +1,7 @@
 # Image_Super_Resolution
 
+![My Image](comparison_gt.jpg)
+
 This repo contains the code and the report produced to tackle the Image Super resolution task.
 
 **Dataset:** NTIRE 2017 Super Resolution Challenge (https://data.vision.ee.ethz.ch/cvl/ntire17/)
