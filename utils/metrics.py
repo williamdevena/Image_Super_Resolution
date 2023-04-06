@@ -28,7 +28,6 @@ def calculate_metrics(original_img, upscaled_img, device):
     if torch.is_tensor(upscaled_img):
         upscaled_img = upscaled_img.permute(1,2,0).detach().cpu().numpy()
 
-    #print(original_img.shape, upscaled_img.shape)
 
     ssim = skimage.metrics.structural_similarity(original_img, upscaled_img, channel_axis=2)
     psnr = skimage.metrics.peak_signal_noise_ratio(original_img, upscaled_img)
@@ -50,21 +49,15 @@ def calculate_lpips_distance(img1, img2, device):
         - lpips_distance (float): LPIPS distance
     """
     img_shape = img1.shape
-    #print(img_shape)
 
     if not torch.is_tensor(img1):
-        img1 = torch.tensor(img1).view(3, img_shape[0], img_shape[1]).float()
+        img1 = torch.tensor(img1).permute(2,0,1).float()
 
     if not torch.is_tensor(img2):
-        img2 = torch.tensor(img2).view(3, img_shape[0], img_shape[1]).float()
+        img2 = torch.tensor(img2).permute(2,0,1).float()
 
-    # mean1, std1 = torch.Tensor.float(img1).mean([1,2]), torch.Tensor.float(img1).std([1,2])
-    # mean2, std2 = torch.Tensor.float(img2).mean([1,2]), torch.Tensor.float(img2).std([1,2])
     mean1, std1 = img1.mean([1,2]), img1.std([1,2])
     mean2, std2 = img2.mean([1,2]), img2.std([1,2])
-
-    #print(mean1, std1)
-    #print(mean2, std2)
 
     # define custom transform
     # here we are using our calculated
@@ -83,8 +76,6 @@ def calculate_lpips_distance(img1, img2, device):
 
     img1 = transform1(img1)
     img2 = transform2(img2)
-
-    #print(img1.shape, img2.shape)
 
     loss_fn = lpips.LPIPS(net='alex').to(device) # best forward scores
     #loss_fn = lpips.LPIPS(net='vgg') # closer to "traditional" perceptual loss, when used for optimization

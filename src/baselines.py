@@ -75,7 +75,6 @@ def test_baseline_upscaling(method, test_ds_path, original_ds_path, path_upscale
         ## ORIGINAL HIGH RESOLUTION IMAGE
         original_img_name = "".join([img_name.split("x")[0], ".png"])
         original_img_path = os.path.join(original_ds_path, original_img_name)
-        # print(original_img_path, low_res_img_path)
         original_img = cv2.imread(original_img_path)
         original_shape = original_img.shape
 
@@ -97,7 +96,6 @@ def test_baseline_upscaling(method, test_ds_path, original_ds_path, path_upscale
         ## SAVES THE UPSCALED IMAGE
         cv2.imwrite(os.path.join(path_upscaled_folder, original_img_name), upscaled_img)
 
-        #print(ssim_score, lpips_distance)
         tot_ssim += ssim
         tot_lpips += lpips
         tot_psnr += psnr

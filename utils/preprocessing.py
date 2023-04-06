@@ -15,6 +15,10 @@ def analyze_quality_of_images(path_ds):
         path_ds (str): path of the dataset
     """
     imagelab = Imagelab(data_path=path_ds)
+
+    # imagelab.list_possible_issue_types()
+    # imagelab.list_default_issue_types()
+
     imagelab.find_issues()
     imagelab.report()
 
@@ -26,7 +30,15 @@ def create_downsampled_ds(original_ds_path, new_dataset_path, downsample_dimensi
     """
     Creates a downsampled version of a given dataset.
 
+    Args:
+        - original_ds_path (str): path of the original dataset
+        we want to downsample
+        - new_dataset_path (str): path of the new downsampled
+        dataset
+        - downsample_dimensions (Tuple): dimensions of the new
+        downsampled images
 
+    Returns: None
     """
     if not os.path.exists(new_dataset_path):
         os.mkdir(new_dataset_path)

@@ -4,3 +4,4 @@ test_upsampling/*
 project_log/assignment.log
 upsampling/*
 runs/*
+models_weights/*

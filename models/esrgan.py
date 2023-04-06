@@ -3,6 +3,10 @@ from torch import nn
 
 
 class ConvBlock(nn.Module):
+    """
+    Convolutional block composed of a convolution and
+    activation function.
+    """
     def __init__(self, in_channels, out_channels, use_act):
         super().__init__()
         self.in_channels=in_channels
@@ -30,6 +34,10 @@ class ConvBlock(nn.Module):
 
 
 class UpSampleBlock(nn.Module):
+    """
+    Upsample block composed of a upsampling operation, convolution
+    and activation function.
+    """
     def __init__(self, upsample_algo, in_channels, scale_factor=2):
         super().__init__()
         self.upsample_algo=upsample_algo
@@ -45,17 +53,18 @@ class UpSampleBlock(nn.Module):
 
 
     def forward(self, x):
-        #print(x.shape)
         out = self.upsample(x)
         out = self.conv(out)
         out = self.act(out)
-        #print(out.shape)
 
         return out
 
 
 
 class DenseResidualBlock(nn.Module):
+    """
+    Dense Residual Block.
+    """
     def __init__(self, in_channels, channels=32, residual_beta=0.2):
         super().__init__()
         self.in_channels = in_channels
@@ -86,6 +95,9 @@ class DenseResidualBlock(nn.Module):
 
 
 class RRDB(nn.Module):
+    """
+    Residual-In-Residual Dense block.
+    """
     def __init__(self, in_channels, residual_beta=0.2):
         super().__init__()
         self.in_channels = in_channels
@@ -199,45 +211,8 @@ class Discriminator(nn.Module):
             nn.Linear(1024, 1),
         )
 
-        #self.a = nn.AdaptiveAvgPool2d((6, 6))
-        #self.b = nn.Flatten()
-        #nn.Linear(512 * 6 * 6, 1024)
-        #self.c = nn.Linear(128 * 6 * 6, 1024)
-        #self.d = nn.LeakyReLU(0.2, inplace=True)
-        #self.e = nn.Linear(1024, 1)
-
 
     def forward(self, x):
-        #print(x.shape)
         x = self.blocks(x)
-        #print(x.shape)
 
-        #x = self.a(x)
-        #print(x.shape)
-        #x = self.b(x)
-        #print(x.shape)
-        #x = self.c(x)
-        #print(x.shape)
-        #x = self.d(x)
-        #print(x.shape)
-        #x = self.e(x)
-        #print(x.shape)
-
-        #return x
         return self.classifier(x)
-
-
-def main():
-    generator = Generator(upsample_algo="nearest")
-    discriminator = Discriminator()
-    #low_res = 24
-    x = torch.rand((5, 3, 40, 20))
-    gen_out = generator(x)
-    disc_out = discriminator(gen_out)
-
-    print(gen_out.shape, disc_out.shape, disc_out)
-
-
-
-if __name__=="__main__":
-    main()
