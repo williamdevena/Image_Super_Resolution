@@ -1,6 +1,5 @@
 test_upsampling/*
 *.png
-*.jpg
 project_log/*
 runs/*
 models_weights/*
