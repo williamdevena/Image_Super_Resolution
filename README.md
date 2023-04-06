@@ -14,4 +14,4 @@ The first contains the file 'assignment.log' where the results are going to be w
 - **PSNR-oriented CNN**
 - **GAN**
 
-For more details on the approaches proposed refer to the report 'SR_report.pdf' contained in this repo.
+For more details on the approaches proposed refer to the report **'SR_report.pdf'** contained in this repo.
