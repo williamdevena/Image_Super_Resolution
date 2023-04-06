@@ -18,4 +18,4 @@ For more details on the approaches proposed refer to the report **'SR_report.pdf
 
 The image below shows an example of the output of the proposed methods.
 
-![My Image](comparison_gt.jpg)
+![My Image](comparison_gt.png)
