@@ -55,15 +55,9 @@ class SuperResolutionDataset(Dataset):
 
     def __getitem__(self, idx):
         hr_image_name, _ = self.list_couples_hr_lr[idx]
-        # hr_image = cv2.imread(hr_image_name)
-        # lr_image = cv2.imread(lr_image_name)
         image = np.array(Image.open(hr_image_name))
-        #lr_image = Image.open(lr_image_name)
-        #if self.transform:
         image = self.transform_both(image=image)["image"]
         hr_image = self.transform_hr(image=image)["image"]
         lr_image = self.transform_lr(image=image)["image"]
-
-        #lr_image = self.transform(lr_image)
 
         return hr_image, lr_image

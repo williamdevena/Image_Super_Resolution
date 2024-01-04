@@ -374,7 +374,7 @@ def train_gan_generator(generator,
                 adv_loss = 1000*bce(
                     out_fake, torch.ones_like(out_fake)
                 )
-                #print(adv_loss.item())
+
                 vgg_loss = 0.006 * vgg(fake_hr_images, hr_images)
                 #vgg_loss = 0.16 * vgg(fake_hr_images, hr_images)
                 #vgg_loss = 0
@@ -386,14 +386,12 @@ def train_gan_generator(generator,
                 tot_adv_loss += adv_loss.item()
                 tot_vgg_loss += vgg_loss.item()
                 tot_l1_loss += l1_loss.item()
-                #print(tot_adv_loss)
 
             ## OPTIMIZE GEN
             optimizer_gen.zero_grad()
             scaler.scale(gen_final_loss).backward()
             scaler.step(optimizer_gen)
             scaler.update()
-            #optimizer_gen.step()
 
             pbar.set_postfix(GEN=gen_final_loss.item())
 

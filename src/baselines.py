@@ -48,8 +48,7 @@ def baselines():
 def test_baselines(method, test_dataloader, image_folder):
     if not os.path.exists(image_folder):
         os.mkdir(image_folder)
-    #model.to(device)
-    #model.eval()
+
     len_dataloader = len(test_dataloader)
     pbar = tqdm(test_dataloader)
     tot_lpips = 0
@@ -61,20 +60,11 @@ def test_baselines(method, test_dataloader, image_folder):
         lr_image = np.array(lr_image.squeeze(0).permute(1,2,0))
 
         size = (hr_image.shape[1], hr_image.shape[0])
-        #lr_image = np.array(lr_image)
-        #print(lr_image.shape)
         if method=="bilinear":
             fake_hr_image = bilinear_interpolation_upscaling(lr_image, size)
         elif method=="nn":
             fake_hr_image = nearest_neighbour_upscaling(lr_image, size)
 
-        # fake_hr_image = (fake_hr_image+1)/2
-        # fake_hr_image = fake_hr_image*255
-
-        # print(hr_image.shape, fake_hr_image.shape)
-        # print(fake_hr_image, hr_image)
-
-        #pil_fake_image = transforms.ToPILImage()(fake_hr_images)
         image_path = os.path.join(image_folder, f"{idx}.png")
         Image.fromarray(np.uint8(fake_hr_image*255)).convert('RGB').save(image_path)
 
@@ -83,22 +73,9 @@ def test_baselines(method, test_dataloader, image_folder):
         tot_ssim += ssim
         tot_psnr += psnr
 
-        #logger.add_scalars(name_for_tensorboard, {
-        #        'lpips': lpips,
-        #        'ssim': ssim,
-        #        'psnr': psnr,
-        #    }, idx)
-
-        #pbar.set_postfix(L1=loss.item())
-
     tot_lpips /= len(test_dataloader)
     tot_ssim /= len(test_dataloader)
     tot_psnr /= len(test_dataloader)
-
-    # logging.info(
-    #     f"\nBASELINE METRICS\nPSNR: {tot_psnr}\nSSIM: {tot_ssim}\nLPIPS: {tot_lpips}"
-    # )
-
 
     return tot_lpips, tot_ssim, tot_psnr
 

@@ -1,6 +1,7 @@
 test_upsampling/*
 *.png
-project_log/*
 runs/*
 models_weights/*
 main_copy.py
+output_images/*
+output_images*

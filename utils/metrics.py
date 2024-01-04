@@ -59,9 +59,6 @@ def calculate_lpips_distance(img1, img2, device):
     mean1, std1 = img1.mean([1,2]), img1.std([1,2])
     mean2, std2 = img2.mean([1,2]), img2.std([1,2])
 
-    # define custom transform
-    # here we are using our calculated
-    # mean & std
     transform1 = transforms.Compose([
         #transforms.ToTensor(),
         transforms.Normalize(mean1, std1)

@@ -31,6 +31,7 @@ def testing_generator(model, test_dataloader, device, image_folder):
     """
     if not os.path.exists(image_folder):
         os.mkdir(image_folder)
+
     model.to(device)
     model.eval()
     len_dataloader = len(test_dataloader)
@@ -61,10 +62,6 @@ def testing_generator(model, test_dataloader, device, image_folder):
     tot_lpips /= len(test_dataloader)
     tot_ssim /= len(test_dataloader)
     tot_psnr /= len(test_dataloader)
-
-    # logging.info(
-    #     f"\nPSNR: {tot_psnr}\nSSIM: {tot_ssim}\nLPIPS: {tot_lpips}"
-    # )
 
     return tot_lpips, tot_ssim, tot_psnr
 

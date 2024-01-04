@@ -16,9 +16,6 @@ def analyze_quality_of_images(path_ds):
     """
     imagelab = Imagelab(data_path=path_ds)
 
-    # imagelab.list_possible_issue_types()
-    # imagelab.list_default_issue_types()
-
     imagelab.find_issues()
     imagelab.report()
 
